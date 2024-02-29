@@ -1,0 +1,112 @@
+
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>가위바위보 게임</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 20px;
+    }
+    #game-container {
+      border: 1px solid #ddd;
+      padding: 20px;
+      width: 400px;
+    }
+    #choices {
+      display: flex;
+      justify-content: space-around;
+    }
+    #choices button {
+      padding: 10px 20px;
+      margin: 5px;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    #result {
+      margin-top: 20px;
+      padding: 10px;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+    }
+    #stats {
+      margin-top: 20px;
+      padding: 10px;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+    }
+  </style>
+</head>
+<body>
+  <h1>가위바위보 게임</h1>
+  <div id="game-container">
+    <p>가위, 바위, 보 중 하나를 선택하세요:</p>
+    <div id="choices">
+      <button id="rock">바위</button>
+      <button id="paper">보</button>
+      <button id="scissors">가위</button>
+    </div>
+    <div id="result"></div>
+    <div id="stats"></div>
+  </div>
+
+  <script>
+    const choices = ["가위", "바위", "보"];
+    const stats = {
+      승: 0,
+      패: 0,
+      무승부: 0,
+    };
+
+    function playGame() {
+      const playerChoice = document.querySelector('#choices button.active').textContent;
+      const computerChoice = choices[Math.floor(Math.random() * choices.length)];
+
+      document.querySelector('#result').textContent = `사용자: ${playerChoice}, 컴퓨터: ${computerChoice}`;
+
+      if (playerChoice === computerChoice) {
+        document.querySelector('#result').textContent += " (무승부)";
+        stats.무승부++;
+      } else if (
+        (playerChoice === "가위" && computerChoice === "보") ||
+        (playerChoice === "바위" && computerChoice === "가위") ||
+        (playerChoice === "보" && computerChoice === "바위")
+      ) {
+        document.querySelector('#result').textContent += " (사용자 승리!)";
+        stats.승++;
+      } else {
+        document.querySelector('#result').textContent += " (컴퓨터 승리!)";
+        stats.패++;
+      }
+
+      updateStats();
+    }
+
+    function updateStats() {
+      document.querySelector('#stats').textContent = `
+        승: ${stats.승}
+        패: ${stats.패}
+        무승부: ${stats.무승부}
+      `;
+    }
+
+    function init() {
+      const buttons = document.querySelectorAll('#choices button');
+      buttons.forEach((button) => {
+        button.addEventListener('click', () => {
+          buttons.forEach((button) => button.classList.remove('active'));
+          button.classList.add('active');
+          playGame();
+        });
+      });
+
+      updateStats();
+    }
+
+    init();
+  </script>
+</body>
+</html>
